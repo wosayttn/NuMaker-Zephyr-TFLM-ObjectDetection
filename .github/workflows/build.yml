@@ -2,7 +2,7 @@ name: Zerphy building
 
 on:
   push:
-    branches-ignore:
+    branches:
       - main
       - master
   workflow_dispatch:
