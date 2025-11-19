@@ -11,11 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          path: app
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -24,10 +19,14 @@ jobs:
       - name: Setup Zephyr project
         uses: zephyrproject-rtos/action-zephyr-setup@v1
         with:
-          app-path: app
           toolchains: arm-zephyr-eabi
 
       - name: Build
         run: |
-          west build app
-          
+          mkdir applications
+          cd applications
+          git clone https://github.com/OpenNuvoton/NuMaker-Zephyr-TFLM-ObjectDetection
+          cd ..
+          west config manifest.project-filter -- +tflite-micro
+          west update
+          west -v build -b numaker_m55m1 applications/NuMaker-Zephyr-TFLM-ObjectDetection --shield himax_hm1055 --shield levetop_lt7381
